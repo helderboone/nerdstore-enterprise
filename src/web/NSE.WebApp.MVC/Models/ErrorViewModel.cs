@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 
 namespace NSE.WebApp.MVC.Models
 {
@@ -7,5 +7,17 @@ namespace NSE.WebApp.MVC.Models
         public string RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    }
+
+    public class ResponseResult
+    {
+        public string Title { get; set; }
+        public int Status { get; set; }
+        public ResponseErrorMessage Errors { get; set; }
+    }
+
+    public class ResponseErrorMessage
+    {
+        public List<string> Mensagens { get; set; }
     }
 }
