@@ -28,6 +28,7 @@ namespace NSE.WebApp.MVC.Controllers
         }
 
         [HttpPost]
+        [Route("nova-conta")]
         public async Task<IActionResult> Registro(UsuarioRegistro usuarioRegistro)
         {
             if (!ModelState.IsValid) return View(usuarioRegistro);
