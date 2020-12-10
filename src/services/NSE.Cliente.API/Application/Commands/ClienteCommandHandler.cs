@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using NSE.Clientes.API.Application.Events;
 using NSE.Clientes.API.Models;
 using NSE.Core.Messages;
 using System.Threading;
@@ -23,17 +24,17 @@ namespace NSE.Clientes.API.Application.Commands
 
             var cliente = new Cliente(message.Id, message.Nome, message.Email, message.Cpf);
 
-            var clienteExistente = await _clienteRepository.ObterPorCpf(cliente.Cpf.Numero);
+            var clienteExistente = await _clienteRepository.ObterPorCpf(cliente.Cpf.Numero);            
 
-            //Persistir no banco
-
-            if (clienteExistente != null) //Ja existe cliente com o CPF informado
+            if (clienteExistente != null)
             {
                 AdicionarErro("Este CPF já está em uso");
                 return ValidationResult;
             }
 
             _clienteRepository.Adicionar(cliente);
+
+            cliente.AdicionarEvento(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
 
             return await PersistirDados(_clienteRepository.UnitOfWork);
         }
