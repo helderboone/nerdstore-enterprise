@@ -12,7 +12,7 @@ namespace NSE.Carrinho.API.Data
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
-        public DbSet<CarrinhoItem> CarrinhoItems { get; set; }
+        public DbSet<CarrinhoItem> CarrinhoItens { get; set; }
         public DbSet<CarrinhoCliente> CarrinhoCliente { get; set; }
 
 
