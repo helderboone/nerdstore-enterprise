@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.Core.Mediator;
 using NSE.Pedidos.Infra.Data;
 using NSE.WebAPI.Core.Usuario;
 
@@ -11,6 +12,7 @@ namespace NSE.Pedidos.API.Configuration
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAspNetUser, AspNetUser>();
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<PedidosContext>();
         }
     }
