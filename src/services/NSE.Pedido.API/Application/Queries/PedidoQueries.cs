@@ -3,6 +3,7 @@ using NSE.Pedidos.API.Application.DTO;
 using NSE.Pedidos.Domain.Pedidos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSE.Pedidos.API.Application.Queries
@@ -34,25 +35,54 @@ namespace NSE.Pedidos.API.Application.Queries
                                 AND P.PEDIDOSTATUS = 1 
                                 ORDER BY P.DATACADASTRO DESC";
 
-            var pedido = await _pedidoRepository.ObterConexao()
-                .QueryAsync<PedidoDTO, PedidoItemDTO, EnderecoDTO, PedidoDTO>(sql, (p, pi, e) => 
-                {
-                    p.PedidoItems.Add(pi);
-                    p.Endereco = e;
-                    return p;
-                }, new { clienteId });
+            var pedido = await _pedidoRepository.ObterConexao().QueryAsync<dynamic>(sql, new { clienteId });
 
-            return MapearPedido();
+            return MapearPedido(pedido);
         }
 
         public async Task<IEnumerable<PedidoDTO>> ObterListaPorClienteId(Guid clienteId)
         {
-            throw new NotImplementedException();
+            var pedidos = await _pedidoRepository.ObterListaPorClienteId(clienteId);
+
+            return pedidos.Select(PedidoDTO.ParaPedidoDTO);
         }        
 
-        private PedidoDTO MapearPedido()
+        private PedidoDTO MapearPedido(dynamic result)
         {
-            return new PedidoDTO();
+            var pedido = new PedidoDTO
+            {
+                Codigo = result[0].CODIGO,
+                Status = result[0].PEDIDOSTATUS,
+                ValorTotal = result[0].VALORTOTAL,
+                Desconto = result[0].DESCONTO,
+                VoucherUtilizado = result[0].VOUCHERUTILIZADO,
+                PedidoItems = new List<PedidoItemDTO>(),
+                Endereco = new EnderecoDTO
+                {
+                    Logradouro = result[0].LOGRADOURO,
+                    Bairro = result[0].BAIRRO,
+                    Cep = result[0].CEP,
+                    Cidade = result[0].CIDADE,
+                    Complemento = result[0].COMPLETO,
+                    Estado = result[0].ESTADO,
+                    Numero = result[0].NUMERO
+                }
+            };
+
+            foreach (var item in result)
+            {
+                var pedidoItem = new PedidoItemDTO
+                {
+                    Nome = item.PRODUTONOME,
+                    Valor = item.VALORUNITARIO,
+                    Quantidade = item.QUANTIDADE,
+                    Imagem = item.PRODUTOIMAGEM
+                };
+
+                pedido.PedidoItems.Add(pedidoItem);
+            }
+
+            return pedido;
         }
     }
 }
