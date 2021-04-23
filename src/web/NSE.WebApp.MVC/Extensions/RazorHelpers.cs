@@ -27,7 +27,12 @@ namespace NSE.WebApp.MVC.Extensions
 
         public static string FormatoMoeda(this RazorPage page, decimal valor)
         {
-            return valor > 0 ? string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor) : "Gratuito";
+            return FormatoMoeda(valor);
+        }
+
+        private static string FormatoMoeda(decimal valor)
+        {
+            return string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor);
         }
 
         public static string UnidadesPorProduto(this RazorPage page, int unidades)
@@ -46,6 +51,11 @@ namespace NSE.WebApp.MVC.Extensions
             }
 
             return sb.ToString();
+        }
+
+        public static string UnidadesPorProdutoValorTotal(this RazorPage page, int unidades, decimal valor)
+        {
+            return $"{unidades}x {FormatoMoeda(valor)} = Total: {FormatoMoeda(valor * unidades)}";
         }
     }
 }

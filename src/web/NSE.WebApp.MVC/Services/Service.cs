@@ -36,7 +36,7 @@ namespace NSE.WebApp.MVC.Services
             return true;
         }
 
-        protected ResponseResult RetornoOK()
+        protected ResponseResult RetornoOk()
         {
             return new ResponseResult();
         }
