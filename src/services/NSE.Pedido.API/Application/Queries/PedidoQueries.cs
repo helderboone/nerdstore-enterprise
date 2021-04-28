@@ -24,7 +24,9 @@ namespace NSE.Pedidos.API.Application.Queries
         }
         public async Task<PedidoDTO> ObterUltimoPedido(Guid clienteId)
         {
-            const string sql = @"SELECT
+            try
+            {
+                const string sql = @"SELECT
                                 P.ID AS 'ProdutoId', P.CODIGO, P.VOUCHERUTILIZADO, P.DESCONTO, P.VALORTOTAL, P.PEDIDOSTATUS,
                                 P.LOGRADOURO, P.NUMERO, P.BAIRRO, P.CEP, P.COMPLEMENTO, P.CIDADE, P.ESTADO,
                                 PIT.ID AS 'ProdutoItemId', PIT.PRODUTONOME, PIT.QUANTIDADE, PIT.PRODUTOIMAGEM, PIT.VALORUNITARIO 
@@ -35,9 +37,17 @@ namespace NSE.Pedidos.API.Application.Queries
                                 AND P.PEDIDOSTATUS = 1 
                                 ORDER BY P.DATACADASTRO DESC";
 
-            var pedido = await _pedidoRepository.ObterConexao().QueryAsync<dynamic>(sql, new { clienteId });
+                var conexao = _pedidoRepository.ObterConexao();
 
-            return MapearPedido(pedido);
+                var pedido = await conexao.QueryAsync<dynamic>(sql, new { clienteId });
+
+                return MapearPedido(pedido);
+            }
+            catch (Exception e )
+            {
+                throw e ;
+            }
+            
         }
 
         public async Task<IEnumerable<PedidoDTO>> ObterListaPorClienteId(Guid clienteId)

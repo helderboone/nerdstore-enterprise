@@ -46,7 +46,7 @@ namespace NSE.Pedidos.API.Application.Commands
             pedido.AutorizarPedido();
 
             //Adicionar evento
-            pedido.AdicionarEvento(new PedidoRealizadoEvent(pedido.Id, pedido.ClientId));
+            pedido.AdicionarEvento(new PedidoRealizadoEvent(pedido.Id, pedido.ClienteId));
 
             //Adicionar Pedido Repositório
             _pedidoRepository.Adicionar(pedido);
