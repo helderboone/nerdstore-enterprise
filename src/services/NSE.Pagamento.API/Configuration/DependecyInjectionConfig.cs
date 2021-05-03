@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSE.WebAPI.Core.Usuario;
 
-namespace NSE.Pagamento.API.Configuration
+namespace NSE.Pagamentos.API.Configuration
 {
     public static class DependecyInjectionConfig
     {
