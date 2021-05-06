@@ -12,6 +12,7 @@ namespace NSE.Pedidos.API.Application.Queries
     {
         Task<PedidoDTO> ObterUltimoPedido(Guid clienteId);
         Task<IEnumerable<PedidoDTO>> ObterListaPorClienteId(Guid clienteId);
+        Task<PedidoDTO> ObterPedidosAutorizados();
     }
 
     public class PedidoQueries : IPedidoQueries
@@ -93,6 +94,29 @@ namespace NSE.Pedidos.API.Application.Queries
             }
 
             return pedido;
+        }
+
+        public async Task<PedidoDTO> ObterPedidosAutorizados()
+        {
+            const string sql = @"SELECT TOP 1
+                                P.ID AS 'PedidoId', P.ID, P.CLIENTEID,
+                                PI.ID AS 'PedidoItemId', PI.ID, PI.PRODUTOID, PI.QUANTIDADE
+                                FROM PEDIDOS P 
+                                INNER JOIN PEDIDOITEMS PI ON P.ID = PI.PEDIDOID 
+                                WHERE P.PEDIDOSTATUS = 1                                
+                                ORDER BY P.DATACADASTRO";
+
+            var conexao = _pedidoRepository.ObterConexao();
+
+            var pedido = await conexao.QueryAsync<PedidoDTO, PedidoItemDTO, PedidoDTO>(sql, (p, pi) =>
+            {
+                p.PedidoItems = new List<PedidoItemDTO>();
+                p.PedidoItems.Add(pi);
+
+                return p;
+            }, splitOn: "PedidoId, PedidoItemId");
+
+            return pedido.FirstOrDefault();
         }
     }
 }
