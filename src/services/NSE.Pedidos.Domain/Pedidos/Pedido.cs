@@ -33,8 +33,6 @@ namespace NSE.Pedidos.Domain.Pedidos
 
         private readonly List<PedidoItem> _pedidoItems;
 
-        
-
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
 
         //V.O
@@ -46,6 +44,16 @@ namespace NSE.Pedidos.Domain.Pedidos
         public void AutorizarPedido()
         {
             PedidoStatus = PedidoStatus.Autorizado;
+        }
+
+        public void FinalizarPedido()
+        {
+            PedidoStatus = PedidoStatus.Pago;
+        }
+
+        public void CancelarPedido()
+        {
+            PedidoStatus = PedidoStatus.Cancelado;
         }
 
         public void AtribuirVoucher(Voucher voucher)
@@ -92,6 +100,6 @@ namespace NSE.Pedidos.Domain.Pedidos
 
             ValorTotal = valor < 0 ? 0 : valor;
             Desconto = desconto;
-        }
+        }       
     }
 }
