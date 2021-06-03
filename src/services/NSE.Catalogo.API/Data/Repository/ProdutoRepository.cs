@@ -22,15 +22,16 @@ namespace NSE.Catalogo.API.Data.Repository
 
         public async Task<PagedResult<Produto>> ObterTodos(int pageSize, int pageIndex, string query = null)
         {
-            var sql = @$"SELECT * FROM Produtos
-                        WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')
-                        ORDER BY [Nome]
-                        OFFSET {pageSize + (pageIndex - 1)} ROWS
-                        FETCH NEXT {pageSize} ROWS ONLY
-                        SELECT COUNT(Id) FROM Produtos
-                        WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')";
+            var sql = @$"SELECT * FROM Produtos 
+                      WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%') 
+                      ORDER BY [Nome] 
+                      OFFSET {pageSize * (pageIndex - 1)} ROWS 
+                      FETCH NEXT {pageSize} ROWS ONLY 
+                      SELECT COUNT(Id) FROM Produtos 
+                      WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')";
 
-            var multi = await _context.Database.GetDbConnection().QueryMultipleAsync(sql, new { Nome = query });
+            var multi = await _context.Database.GetDbConnection()
+                .QueryMultipleAsync(sql, new { Nome = query });
 
             var produtos = multi.Read<Produto>();
             var total = multi.Read<int>().FirstOrDefault();
