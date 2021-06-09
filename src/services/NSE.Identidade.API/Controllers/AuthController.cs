@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NetDevPack.Security.JwtSigningCredentials.Interfaces;
 using NSE.Core.Messages.Integration;
 using NSE.Identidade.API.Models;
 using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Usuario;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,16 +25,22 @@ namespace NSE.Identidade.API.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
+        private readonly IAspNetUser _aspNetUser;
+        private readonly IJsonWebKeySetService _jwksService;
         private IMessageBus _bus;
 
         public AuthController(SignInManager<IdentityUser> signInManager,
                               UserManager<IdentityUser> userManager,
                               IOptions<AppSettings> appSettings,
+                              IAspNetUser aspNetUser,
+                              IJsonWebKeySetService jwksService,
                               IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _aspNetUser = aspNetUser;
+            _jwksService = jwksService;
             _bus = bus;
         }
 
@@ -129,14 +137,16 @@ namespace NSE.Identidade.API.Controllers
         private string CodificarToken(ClaimsIdentity identityClaims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            var currentIssuer = $"{_aspNetUser.ObterHttpContext().Request.Scheme}://{_aspNetUser.ObterHttpContext().Request.Host}";
+
+            var key = _jwksService.GetCurrent();
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = _appSettings.Emissor,
-                Audience = _appSettings.ValidoEm,
+                Issuer = currentIssuer,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = key
             });
 
             return tokenHandler.WriteToken(token);
