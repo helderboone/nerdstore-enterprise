@@ -13,6 +13,5 @@ namespace NSE.Core.Messages.Integration
         public string NumeroCartao { get; set; }
         public string MesAnoVencimento { get; set; }
         public string CVV { get; set; }
-
     }
 }

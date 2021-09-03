@@ -13,6 +13,8 @@ namespace NSE.Identidade.API.Configuration
     {
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AppTokenSettings>(configuration.GetSection(nameof(AppTokenSettings)));
+
             services.AddJwksManager(options => options.Algorithm = Algorithm.ES256)
                 .PersistKeysToDatabaseStore<ApplicationDbContext>();
 
