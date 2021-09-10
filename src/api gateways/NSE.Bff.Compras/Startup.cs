@@ -28,7 +28,6 @@ namespace NSE.Bff.Compras
             Configuration = builder.Build();
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApiConfiguration(Configuration);
@@ -40,6 +39,8 @@ namespace NSE.Bff.Compras
             services.RegisterServices();
 
             services.AddMesageBusConfiguration(Configuration);
+
+            services.ConfigureGrpcServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

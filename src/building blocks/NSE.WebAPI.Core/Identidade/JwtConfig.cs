@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Security.JwtExtensions;
-using System.Text;
+using System.Net.Http;
 
 namespace NSE.WebAPI.Core.Identidade
 {
@@ -17,11 +16,6 @@ namespace NSE.WebAPI.Core.Identidade
 
             var appSettings = appSettingsSection.Get<AppSettings>();
 
-            if (string.IsNullOrEmpty(appSettings.AutenticacaoJwksUrl))
-            {
-
-            }
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -29,6 +23,7 @@ namespace NSE.WebAPI.Core.Identidade
             }).AddJwtBearer(bearerOptions =>
             {
                 bearerOptions.RequireHttpsMetadata = true;
+                bearerOptions.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
                 bearerOptions.SaveToken = true;
                 bearerOptions.SetJwksOptions(new JwkOptions(appSettings.AutenticacaoJwksUrl));
             });
