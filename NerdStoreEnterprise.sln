@@ -37,11 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Carrinho.API", "src\ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Catalogo.API", "src\services\NSE.Catalogo.API\NSE.Catalogo.API.csproj", "{FDEFB70D-D261-48E2-8237-283A77DDF178}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Clientes.API", "src\services\NSE.Cliente.API\NSE.Clientes.API.csproj", "{0D75E5D8-4155-4F2E-88FD-8BCABBF35C6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Clientes.API", "src\services\NSE.Clientes.API\NSE.Clientes.API.csproj", "{0D75E5D8-4155-4F2E-88FD-8BCABBF35C6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Pagamentos.API", "src\services\NSE.Pagamento.API\NSE.Pagamentos.API.csproj", "{AE77A2C8-0F66-4230-BCE1-69A81AF07108}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Pagamentos.API", "src\services\NSE.Pagamentos.API\NSE.Pagamentos.API.csproj", "{AE77A2C8-0F66-4230-BCE1-69A81AF07108}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Pedidos.API", "src\services\NSE.Pedido.API\NSE.Pedidos.API.csproj", "{A4C3DE03-4A70-4686-86C2-7A6B0351466B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Pedidos.API", "src\services\NSE.Pedidos.API\NSE.Pedidos.API.csproj", "{A4C3DE03-4A70-4686-86C2-7A6B0351466B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{4FB1147E-AE34-44C5-BF3D-B59285FE8685}"
 EndProject
